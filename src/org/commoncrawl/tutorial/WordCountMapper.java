@@ -26,7 +26,8 @@ public class WordCountMapper extends MapReduceBase
 	  page_content.replaceAll("\\s+", " ");
 	  // Split by space and output to OutputCollector
 	  for (String word: page_content.split(" ")) {
-		  output.collect(new Text(word), new LongWritable(1));
+		  output.collect(new Text("test"), new LongWritable(1));
+		  //output.collect(new Text(word), new LongWritable(1));
 	  }
   }
 }
