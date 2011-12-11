@@ -26,7 +26,7 @@ public class HelloWorld {
     System.out.println("Using AWS Credentials: " + awsCredentials);
     System.out.println("Using S3 bucket paths: " + inputPrefixes);
     
-    // Creates a new Job Configuration for this Hadoop job
+    // Creates a new job configuration for this Hadoop job.
     JobConf conf = new JobConf();
 
     // Configures this job with your Amazon AWS credentials
@@ -39,7 +39,7 @@ public class HelloWorld {
     // in this case, gzipped ARC files from the specified Amazon S3 bucket
     // paths.
     ARCInputFormat inputFormat = new ARCInputFormat();
-    ARCInputFormat.setARCSourceClass(conf, JetS3tARCSource.class);
+    //ARCInputFormat.setARCSourceClass(conf, JetS3tARCSource.class);
     inputFormat.configure(conf);
     conf.setInputFormat(ARCInputFormat.class);
     
