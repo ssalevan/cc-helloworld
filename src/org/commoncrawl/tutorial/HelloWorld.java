@@ -9,6 +9,7 @@ import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapred.TextOutputFormat;
 import org.commoncrawl.hadoop.io.ARCInputFormat;
 import org.commoncrawl.hadoop.io.JetS3tARCSource;
 
@@ -47,8 +48,8 @@ public class HelloWorld {
     conf.setOutputValueClass(LongWritable.class);
     
     // Configures where the output goes to when running our Hadoop job.
-    FileOutputFormat.setOutputPath(conf, new Path(outputFile));
-
+    TextOutputFormat.setOutputPath(conf, new Path(outputFile));
+    conf.setOutputFormat(TextOutputFormat.class);
     // Tells the user some context about this job.
     InputSplit[] splits = inputFormat.getSplits(conf, 0);
     if (splits.length == 0) {
