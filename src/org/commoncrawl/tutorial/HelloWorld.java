@@ -24,7 +24,7 @@ public class HelloWorld {
     
     // Echoes back command-line arguments.
     System.out.println("Using AWS Credentials: " + awsCredentials);
-    System.out.println("Using S3 bucket paths:" + inputPrefixes);
+    System.out.println("Using S3 bucket paths: " + inputPrefixes);
     
     // Creates a new Job Configuration for this Hadoop job
     JobConf conf = new JobConf();
