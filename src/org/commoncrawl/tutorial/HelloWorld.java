@@ -27,35 +27,35 @@ import org.commoncrawl.hadoop.io.JetS3tARCSource;
 public class HelloWorld {
   private static final String CC_BUCKET = "commoncrawl-crawl-002";
   
-  private static class CSVOutputFormat
+  public static class CSVOutputFormat
       extends TextOutputFormat<Text, LongWritable> {
-	public RecordWriter<Text, LongWritable> getRecordWriter(
-		FileSystem ignored, JobConf job, String name, Progressable progress)
-		throws IOException {
+    public RecordWriter<Text, LongWritable> getRecordWriter(
+        FileSystem ignored, JobConf job, String name, Progressable progress)
+        throws IOException {
       Path file = FileOutputFormat.getTaskOutputPath(job, name);
       FileSystem fs = file.getFileSystem(job);
       FSDataOutputStream fileOut = fs.create(file, progress);
       return new CSVRecordWriter(fileOut);
-	}   
+    }   
 	
-	protected static class CSVRecordWriter
-	    implements RecordWriter<Text, LongWritable> {
-	  protected DataOutputStream outStream ;
-	
+    protected static class CSVRecordWriter
+        implements RecordWriter<Text, LongWritable> {
+      protected DataOutputStream outStream ;
+
       public CSVRecordWriter(DataOutputStream out) {
-		this.outStream = out ; 
+        this.outStream = out ; 
+      }
+
+      public synchronized void write(Text key, LongWritable value)
+	      throws IOException {
+        CsvRecordOutput csvOutput = new CsvRecordOutput(outStream);
+        csvOutput.writeString(key.toString(), "word");
+        csvOutput.writeLong(value.get(), "ocurrences");
 	  }
 
-	  public synchronized void write(Text key, LongWritable value)
-	      throws IOException {
-	    CsvRecordOutput csvOutput = new CsvRecordOutput(outStream);
-	    csvOutput.writeString(key.toString(), "word");
-	    csvOutput.writeLong(value.get(), "ocurrences");
-	  }
-		
 	  public synchronized void close(Reporter reporter) throws IOException {
-		outStream.close();
-	  }
+        outStream.close();
+      }
     }	  
   }
   
@@ -93,8 +93,9 @@ public class HelloWorld {
     
     // Configures where the output goes to when running our Hadoop job.
     CSVOutputFormat.setOutputPath(conf, new Path(outputFile));
-    //TextOutputFormat outputFormat = new TextOutputFormat();
+    CSVOutputFormat.setCompressOutput(conf, false);
     conf.setOutputFormat(CSVOutputFormat.class);
+    
     // Tells the user some context about this job.
     InputSplit[] splits = inputFormat.getSplits(conf, 0);
     if (splits.length == 0) {
