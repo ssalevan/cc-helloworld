@@ -32,7 +32,9 @@
     <mkdir dir="${dist}/lib"/>
 
     <!-- Put everything in ${build} into the HelloWorld-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/lib/HelloWorld-${DSTAMP}.jar" basedir="${build}"/>
+    <jar jarfile="${dist}/lib/HelloWorld-${DSTAMP}.jar" basedir="${build}">
+      <zipgroupfileset dir="lib" includes="*.jar"/>
+    </jar>
   </target>
 
   <target name="clean"
