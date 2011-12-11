@@ -11,7 +11,6 @@ import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.commoncrawl.hadoop.io.ARCInputFormat;
 import org.commoncrawl.hadoop.io.JetS3tARCSource;
-import org.jets3t.service.impl.
 
 public class HelloWorld {
   private static final String CC_BUCKET = "commoncrawl-crawl-002";
