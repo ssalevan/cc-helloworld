@@ -38,6 +38,7 @@ public class HelloWorld {
     // Configures where the input comes from when running our Hadoop job,
     // in this case, gzipped ARC files from the specified Amazon S3 bucket
     // paths.
+    ARCInputFormat.setARCSourceClass(conf, JetS3tARCSource.class);
     ARCInputFormat inputFormat = new ARCInputFormat();
     inputFormat.configure(conf);
     conf.setInputFormat(ARCInputFormat.class);
