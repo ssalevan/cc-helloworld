@@ -41,7 +41,7 @@ public class HelloWorld {
     ARCInputFormat inputFormat = new ARCInputFormat();
     //ARCInputFormat.setARCSourceClass(conf, JetS3tARCSource.class);
     inputFormat.configure(conf);
-    conf.setInputFormat(ARCInputFormat.class);
+    //conf.setInputFormat(ARCInputFormat.class);
     
     // Configures what kind of Hadoop output we want.
     conf.setOutputKeyClass(Text.class);
