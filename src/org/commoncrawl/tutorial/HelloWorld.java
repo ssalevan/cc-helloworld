@@ -1,20 +1,63 @@
 package org.commoncrawl.tutorial;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.FileOutputFormat;
+import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
+import org.apache.hadoop.mapred.LineRecordReader;
+import org.apache.hadoop.mapred.RecordReader;
+import org.apache.hadoop.mapred.RecordWriter;
+import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.mapred.TextOutputFormat;
+import org.apache.hadoop.record.CsvRecordOutput;
+import org.apache.hadoop.util.Progressable;
 import org.commoncrawl.hadoop.io.ARCInputFormat;
 import org.commoncrawl.hadoop.io.JetS3tARCSource;
 
 public class HelloWorld {
   private static final String CC_BUCKET = "commoncrawl-crawl-002";
+  
+  private static class CSVOutputFormat
+      extends TextOutputFormat<Text, LongWritable> {
+	public RecordWriter<Text, LongWritable> getRecordWriter(
+		FileSystem ignored, JobConf job, String name, Progressable progress)
+		throws IOException {
+      Path file = FileOutputFormat.getTaskOutputPath(job, name);
+      FileSystem fs = file.getFileSystem(job);
+      FSDataOutputStream fileOut = fs.create(file, progress);
+      return new CSVRecordWriter(fileOut);
+	}   
+	
+	protected static class CSVRecordWriter
+	    implements RecordWriter<Text, LongWritable> {
+	  protected DataOutputStream outStream ;
+	
+      public CSVRecordWriter(DataOutputStream out) {
+		this.outStream = out ; 
+	  }
+
+	  public synchronized void write(Text key, LongWritable value)
+	      throws IOException {
+	    CsvRecordOutput csvOutput = new CsvRecordOutput(outStream);
+	    csvOutput.writeString(key.toString(), "word");
+	    csvOutput.writeLong(value.get(), "ocurrences");
+	  }
+		
+	  public synchronized void close(Reporter reporter) throws IOException {
+		outStream.close();
+	  }
+    }	  
+  }
   
   public static void main(String[] args) throws IOException {
     // Parses command-line arguments.
@@ -43,13 +86,15 @@ public class HelloWorld {
     ARCInputFormat inputFormat = new ARCInputFormat();
     inputFormat.configure(conf);
     conf.setInputFormat(ARCInputFormat.class);
+    
     // Configures what kind of Hadoop output we want.
     conf.setOutputKeyClass(Text.class);
     conf.setOutputValueClass(LongWritable.class);
     
     // Configures where the output goes to when running our Hadoop job.
-    TextOutputFormat.setOutputPath(conf, new Path(outputFile));
-    conf.setOutputFormat(TextOutputFormat.class);
+    CSVOutputFormat.setOutputPath(conf, new Path(outputFile));
+    //TextOutputFormat outputFormat = new TextOutputFormat();
+    conf.setOutputFormat(CSVOutputFormat.class);
     // Tells the user some context about this job.
     InputSplit[] splits = inputFormat.getSplits(conf, 0);
     if (splits.length == 0) {
@@ -58,7 +103,6 @@ public class HelloWorld {
     }
     System.out.println("Found " + splits.length + " InputSplits:");
     for (InputSplit split : splits) {
-        
     	System.out.println(" - will process file: " + split.toString());
     }
     
