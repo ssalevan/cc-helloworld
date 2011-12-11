@@ -14,7 +14,7 @@ import org.commoncrawl.hadoop.io.ARCInputFormat;
 import org.commoncrawl.hadoop.io.JetS3tARCSource;
 
 public class HelloWorld {
-  private static final String CC_BUCKET = "common-crawl-002";
+  private static final String CC_BUCKET = "commoncrawl-crawl-002";
   
   public static void main(String[] args) throws IOException {
     String awsCredentials = args[0];
