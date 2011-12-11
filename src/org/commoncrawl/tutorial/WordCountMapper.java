@@ -20,7 +20,11 @@ public class WordCountMapper extends MapReduceBase
 	      OutputCollector<Text, LongWritable> output, Reporter reporter)
 	      throws IOException {
 	  // Un-GZIP compressed page data
-	  GZIPInputStream gzipIn = new GZIPInputStream(value.getContent().getBytes());
+	  try {
+	    GZIPInputStream gzipIn = new GZIPInputStream(value.getContent().getBytes());
+	  } catch (IOException e) {
+		  return;  // not in GZIP format, we can't process it
+	  }
 	  String page_content = new Scanner(gzipIn).useDelimiter("\\A").next();
 	  //String page_content = Jsoup.parse(value.getContent().toString()).text();
 	  // Remove all punctuation
