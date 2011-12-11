@@ -1,6 +1,9 @@
 package org.commoncrawl.tutorial;
 
 import java.io.IOException;
+import java.util.Scanner;
+import java.util.zip.GZIPInputStream;
+
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.MapReduceBase;
@@ -12,13 +15,13 @@ import org.commoncrawl.protocol.shared.ArcFileItem;
 
 public class WordCountMapper extends MapReduceBase 
   implements Mapper<Text, ArcFileItem, Text, LongWritable> {
-  
+
   public void map(Text key, ArcFileItem value,
 	      OutputCollector<Text, LongWritable> output, Reporter reporter)
 	      throws IOException {
-	  // Extract text from attached HTML
-	  value.getContent();
-	  String page_content = value.getContent().toString();
+	  // Un-GZIP compressed page data
+	  GZIPInputStream gzipIn = new GZIPInputStream(value.getContent().getBytes());
+	  String page_content = new Scanner(gzipIn).useDelimiter("\\A").next();
 	  //String page_content = Jsoup.parse(value.getContent().toString()).text();
 	  // Remove all punctuation
 	  page_content.replaceAll("\\p{Punct}", "");
