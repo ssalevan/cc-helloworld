@@ -11,6 +11,7 @@ import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.commoncrawl.hadoop.io.ARCInputFormat;
 import org.commoncrawl.hadoop.io.JetS3tARCSource;
+import org.jets3t.service.impl.
 
 public class HelloWorld {
   private static final String CC_BUCKET = "commoncrawl-crawl-002";
@@ -40,7 +41,7 @@ public class HelloWorld {
     // paths.
     ARCInputFormat inputFormat = new ARCInputFormat();
     inputFormat.configure(conf);
-    
+    conf.setInputFormat(ARCInputFormat.class);
     // Configures what kind of Hadoop output we want.
     conf.setOutputKeyClass(Text.class);
     conf.setOutputValueClass(LongWritable.class);
@@ -56,7 +57,8 @@ public class HelloWorld {
     }
     System.out.println("Found " + splits.length + " InputSplits:");
     for (InputSplit split : splits) {
-        System.out.println(" - will process file: " + split.toString());
+        
+    	System.out.println(" - will process file: " + split.toString());
     }
     
     // Tells Hadoop what Mapper and Reducer classes to use.
