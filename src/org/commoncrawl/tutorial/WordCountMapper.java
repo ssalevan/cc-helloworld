@@ -17,6 +17,7 @@ public class WordCountMapper extends MapReduceBase
 	      OutputCollector<Text, LongWritable> output, Reporter reporter)
 	      throws IOException {
 	  // Extract text from attached HTML
+	  value.getContent();
 	  String page_content = value.getContent().toString();
 	  //String page_content = Jsoup.parse(value.getContent().toString()).text();
 	  // Remove all punctuation
@@ -25,6 +26,7 @@ public class WordCountMapper extends MapReduceBase
 	  page_content.replaceAll("\\t|\\n", " ");
 	  page_content.replaceAll("\\s+", " ");
 	  // Split by space and output to OutputCollector
+	  output.collect(new Text("test"), new LongWritable(1));
 	  output.collect(new Text(page_content), new LongWritable(1));
 	  //for (String word: page_content.split(" ")) {
 		  //output.collect(new Text("test"), new LongWritable(1));
