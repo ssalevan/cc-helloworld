@@ -40,7 +40,7 @@ public class HelloWorld {
     // paths.
     ARCInputFormat inputFormat = new ARCInputFormat();
     inputFormat.configure(conf);
-    conf.setInputFormat(ARCInputFormat.class);
+    //conf.setInputFormat(ARCInputFormat.class);
     
     // Configures what kind of Hadoop output we want.
     conf.setOutputKeyClass(Text.class);
