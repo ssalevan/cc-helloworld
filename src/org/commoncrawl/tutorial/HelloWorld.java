@@ -104,7 +104,7 @@ public class HelloWorld {
     }
     System.out.println("Found " + splits.length + " InputSplits:");
     for (InputSplit split : splits) {
-    	System.out.println(" - will process file: " + split.toString());
+    	System.out.println(" - will process fiile: " + split.toString());
     }
     
     // Tells Hadoop what Mapper and Reducer classes to use.
