@@ -1,7 +1,7 @@
 package org.commoncrawl.tutorial;
 
 import java.io.IOException;
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.MapReduceBase;
 import org.apache.hadoop.mapred.Mapper;
@@ -11,10 +11,10 @@ import org.commoncrawl.protocol.shared.ArcFileItem;
 //import org.jsoup.Jsoup;
 
 public class WordCountMapper extends MapReduceBase 
-  implements Mapper<Text, ArcFileItem, Text, IntWritable> {
+  implements Mapper<Text, ArcFileItem, Text, LongWritable> {
   
   public void map(Text key, ArcFileItem value,
-	      OutputCollector<Text, IntWritable> output, Reporter reporter)
+	      OutputCollector<Text, LongWritable> output, Reporter reporter)
 	      throws IOException {
 	  // Extract text from attached HTML
 	  String page_content = value.getContent().toString();
@@ -26,7 +26,7 @@ public class WordCountMapper extends MapReduceBase
 	  page_content.replaceAll("\\s+", " ");
 	  // Split by space and output to OutputCollector
 	  for (String word: page_content.split(" ")) {
-		  output.collect(new Text(word), new IntWritable(1));
+		  output.collect(new Text(word), new LongWritable(1));
 	  }
   }
 }
