@@ -2,10 +2,12 @@ package org.commoncrawl.tutorial;
 
 import java.io.IOException;
 
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.FileOutputFormat;
+import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.commoncrawl.hadoop.io.ARCInputFormat;
@@ -31,8 +33,17 @@ public class HelloWorld {
     conf.set(JetS3tARCSource.P_INPUT_PREFIXES, inputPrefixes);
     
     ARCInputFormat inputFormat = new ARCInputFormat();
-    FileOutputFormat.setOutputPath(conf, new Path(outputFile));
     inputFormat.configure(conf);
+    FileOutputFormat.setOutputPath(conf, new Path(outputFile));
+    FileSystem localFS = FileSystem.getLocal(conf);
+
+    InputSplit[] splits = inputFormat.getSplits(conf, 0);
+
+    if (splits.length == 0) {
+      System.out.println("ERROR: No Arc Files Found!");
+      return;
+    }
+    System.out.println("Found " + splits.length + " InputSplits:");
     
     conf.setMapperClass(WordCountMapper.class);
     conf.setReducerClass(WordCountReducer.class);
