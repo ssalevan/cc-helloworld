@@ -19,25 +19,25 @@ public class WordCountMapper extends MapReduceBase
   public void map(Text key, ArcFileItem value,
 	      OutputCollector<Text, LongWritable> output, Reporter reporter)
 	      throws IOException {
-	  // Un-GZIP compressed page data
 	  try {
+		// Un-GZIP compressed page data
 	    GZIPInputStream gzipIn = new GZIPInputStream(value.getContent().getBytes());
+	    String page_content = new Scanner(gzipIn).useDelimiter("\\A").next();
+        //String page_content = Jsoup.parse(value.getContent().toString()).text();
+  	    // Remove all punctuation
+	    page_content.replaceAll("\\p{Punct}", "");
+	    // Normalize whitespace to single spaces
+	    page_content.replaceAll("\\t|\\n", " ");
+	    page_content.replaceAll("\\s+", " ");
+	    // Split by space and output to OutputCollector
+	    //output.collect(new Text("test"), new LongWritable(1));
+	    //output.collect(new Text(value.getUri()), new LongWritable(1));
+	    for (String word: page_content.split(" ")) {
+		  //output.collect(new Text("test"), new LongWritable(1));
+		  output.collect(new Text(word), new LongWritable(1));
+	    }
 	  } catch (IOException e) {
 		  return;  // not in GZIP format, we can't process it
 	  }
-	  String page_content = new Scanner(gzipIn).useDelimiter("\\A").next();
-	  //String page_content = Jsoup.parse(value.getContent().toString()).text();
-	  // Remove all punctuation
-	  page_content.replaceAll("\\p{Punct}", "");
-	  // Normalize whitespace to single spaces
-	  page_content.replaceAll("\\t|\\n", " ");
-	  page_content.replaceAll("\\s+", " ");
-	  // Split by space and output to OutputCollector
-	  //output.collect(new Text("test"), new LongWritable(1));
-	  output.collect(new Text(value.getUri()), new LongWritable(1));
-	  //for (String word: page_content.split(" ")) {
-		  //output.collect(new Text("test"), new LongWritable(1));
-		  //output.collect(new Text(word), new LongWritable(1));
-	  //}
   }
 }
