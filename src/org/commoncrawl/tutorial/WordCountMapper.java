@@ -23,13 +23,14 @@ public class WordCountMapper extends MapReduceBase
   public void map(Text key, ArcFileItem value,
       OutputCollector<Text, LongWritable> output, Reporter reporter)
       throws IOException {
-	// Un-GZIP compressed page data
+	// Retrieve page content from ArcFileItem
 	ByteArrayInputStream inputStream = new ByteArrayInputStream(
         value.getContent().getReadOnlyBytes(), 0,
         value.getContent().getCount());
     String content = new Scanner(inputStream)
         .useDelimiter("\\A").next();
-    String page_text = Jsoup.parse(value.getContent().toString()).text();
+    // Parse content into HTML with a tolerant parser
+    String page_text = Jsoup.parse(content).text();
     // Remove all punctuation
     page_text.replaceAll("\\p{Punct}", "");
     // Normalize whitespace to single spaces
