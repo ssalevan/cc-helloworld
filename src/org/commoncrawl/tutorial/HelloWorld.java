@@ -111,6 +111,8 @@ public class HelloWorld {
     conf.setMapperClass(WordCountMapper.class);
     conf.setReducerClass(WordCountReducer.class);
     
+    conf.setJarByClass(HelloWorld.class);
+    
     // Runs the job!
     JobClient.runJob(conf);
   }
