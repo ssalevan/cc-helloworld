@@ -21,17 +21,19 @@ public class WordCountMapper extends MapReduceBase
   implements Mapper<Text, ArcFileItem, Text, LongWritable> {
 
   public void map(Text key, ArcFileItem value,
-	      OutputCollector<Text, LongWritable> output, Reporter reporter)
-	      throws IOException {
+      OutputCollector<Text, LongWritable> output, Reporter reporter)
+      throws IOException {
 	  //try {
 		// Un-GZIP compressed page data
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(
-				value.getContent().getReadOnlyBytes(), 0, value.getContent().getCount());
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(inputStream,Charset.forName("ASCII")));
-		String page_content = "";
-		while ((page_content += reader.readLine()) != null) {}
-		  //GZIPInputStream gzipIn = new GZIPInputStream(value.getContent().getBytes());
+            value.getContent().getReadOnlyBytes(), 0, value.getContent().getCount());
+	    String page_content = new Scanner(inputStream).useDelimiter("\\A").next();
+		/*BufferedReader reader = new BufferedReader(
+            new InputStreamReader(inputStream,Charset.forName("ASCII")));
+		String page_content = "";*/
+		
+		//while ((page_content += reader.readLine()) != null) {}
+		//GZIPInputStream gzipIn = new GZIPInputStream(value.getContent().getBytes());
 	    
 	    //String page_content = new Scanner(inputStream).useDelimiter("\\A").next();
         //String page_content = Jsoup.parse(value.getContent().toString()).text();
