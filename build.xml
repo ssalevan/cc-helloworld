@@ -30,11 +30,15 @@
         description="generate the distribution" >
     <!-- Create the distribution direcftory -->
     <mkdir dir="${dist}/lib"/>
-
-    <!-- Put everything in ${build} into the HelloWorld-${DSTAMP}.jar file -->
-    <jar jarfile="${dist}/lib/HelloWorld-${DSTAMP}.jar" basedir="${build}">
-      <zipgroupfileset dir="lib" includes="*.jar"/>
-    </jar>
+    <mkdir dir="${build}/lib"/>
+    <!-- Put everything in ${build}/lib into the lib/ dir of build -->
+    <copy todir="${build}/lib">
+      <fileset dir="lib" includes="*.jar" />
+    </copy>
+     
+    <jar jarfile="${dist}/lib/HelloWorld.jar" basedir="${build}">
+      <zipfileset includes="**/*.class" src="lib/jsoup-1.6.1.jar"/>
+    </jar> 
   </target>
 
   <target name="clean"
