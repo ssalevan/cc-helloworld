@@ -15,6 +15,7 @@ public class WordCountReducer extends MapReduceBase
 	      OutputCollector<Text, LongWritable> output, Reporter reporter)
 	      throws IOException {
 	long sum = 0;
+	// Summates all word counts for this word.
 	while (values.hasNext()) {
 	  sum += values.next().get();
 	}

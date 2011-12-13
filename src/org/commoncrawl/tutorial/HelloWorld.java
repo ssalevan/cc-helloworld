@@ -112,7 +112,7 @@ public class HelloWorld {
     conf.setReducerClass(WordCountReducer.class);
     
     // Tells Hadoop mappers and reducers to pull dependent libraries from
-    // those bundled into this JAR.333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333335555555555555%%%55555555555555555555555555
+    // those bundled into this JAR.
     conf.setJarByClass(HelloWorld.class);
     
     // Runs the job!

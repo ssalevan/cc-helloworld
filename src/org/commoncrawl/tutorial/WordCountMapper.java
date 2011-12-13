@@ -28,10 +28,10 @@ public class WordCountMapper extends MapReduceBase
       OutputCollector<Text, LongWritable> output, Reporter reporter)
       throws IOException {
 	// Retrieves page content from the passed-in ArcFileItem.
-	if (!value.getMimeType().contains("text")) {
-		return;  // Only parse text.
-	}
-	ByteArrayInputStream inputStream = new ByteArrayInputStream(
+    if (!value.getMimeType().contains("text")) {
+        return;  // Only parse text.
+    }
+    ByteArrayInputStream inputStream = new ByteArrayInputStream(
         value.getContent().getReadOnlyBytes(), 0,
         value.getContent().getCount());
     String content = new Scanner(inputStream)
