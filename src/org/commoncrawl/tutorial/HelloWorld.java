@@ -104,6 +104,11 @@ public class HelloWorld {
     CSVOutputFormat.setCompressOutput(conf, false);
     conf.setOutputFormat(CSVOutputFormat.class);
 
+    // Allows some (10%) of tasks fail; we might encounter the 
+    // occasional troublesome set of records and skipping a few 
+    // of 1000s won't hurt counts too much.
+    conf.set("mapred.max.map.failures.percent", "10");
+
     // Tells the user some context about this job.
     InputSplit[] splits = inputFormat.getSplits(conf, 0);
     if (splits.length == 0) {
@@ -115,15 +120,17 @@ public class HelloWorld {
         System.out.println(" - will process file: " + split.toString());
     }
 
-    // Tells Hadoop which Mapper and Reducer classes to use.
+    // Tells Hadoop what Mapper and Reducer classes to use;
+    // uses combiner since wordcount reduce is associative and commutative.
     conf.setMapperClass(WordCountMapper.class);
+    conf.setCombinerClass(WordCountReducer.class);
     conf.setReducerClass(WordCountReducer.class);
 
     // Tells Hadoop mappers and reducers to pull dependent libraries from
     // those bundled into this JAR.
     conf.setJarByClass(HelloWorld.class);
 
-    // Runs the job!
+    // Runs the job.
     JobClient.runJob(conf);
   }
 }
