@@ -108,7 +108,9 @@ public class HelloWorld {
     }
     
     // Tells Hadoop what Mapper and Reducer classes to use.
+    // Use combiner since wordcount reduce is associative and commutative
     conf.setMapperClass(WordCountMapper.class);
+    conf.setCombinerClass(WordCountReducer.class);
     conf.setReducerClass(WordCountReducer.class);
     
     // Tells Hadoop mappers and reducers to pull dependent libraries from
