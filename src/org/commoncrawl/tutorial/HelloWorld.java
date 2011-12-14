@@ -96,6 +96,11 @@ public class HelloWorld {
     CSVOutputFormat.setCompressOutput(conf, false);
     conf.setOutputFormat(CSVOutputFormat.class);
     
+    // allow some (10%) of tasks fail; we might encounter the 
+    // occasional troublesome set of records and skipping a few 
+    // of 1000s won't hurt counts too much
+    conf.set("mapred.max.map.failures.percent", "10");
+    
     // Tells the user some context about this job.
     InputSplit[] splits = inputFormat.getSplits(conf, 0);
     if (splits.length == 0) {
