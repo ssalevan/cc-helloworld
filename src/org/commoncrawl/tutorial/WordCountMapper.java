@@ -27,30 +27,30 @@ public class WordCountMapper extends MapReduceBase
   public void map(Text key, ArcFileItem value,
       OutputCollector<Text, LongWritable> output, Reporter reporter)
       throws IOException {
-	// Retrieves page content from the passed-in ArcFileItem.
     try {
-	    if (!value.getMimeType().contains("text")) {
-	        return;  // Only parse text.
-	    }
-	    ByteArrayInputStream inputStream = new ByteArrayInputStream(
-	        value.getContent().getReadOnlyBytes(), 0,
-	        value.getContent().getCount());
-	    String content = new Scanner(inputStream)
-	        .useDelimiter("\\A").next();
-	    // Parses HTML with a tolerant parser and extracts all text.
-	    String page_text = Jsoup.parse(content).text();
-	    // Removes all punctuation.
-	    page_text = page_text.replaceAll("\\p{Punct}", "");
-	    // Normalizes whitespace to single spaces.
-	    page_text = page_text.replaceAll("\\t|\\n", " ");
-	    page_text = page_text.replaceAll("\\s+", " ");
-	    // Splits by space and outputs to OutputCollector.
-	    for (String word: page_text.split(" ")) {
-	      output.collect(new Text(word), new LongWritable(1));
-	    }
+      if (!value.getMimeType().contains("text")) {
+        return;  // Only parse text.
+      }
+      // Retrieves page content from the passed-in ArcFileItem.
+      ByteArrayInputStream inputStream = new ByteArrayInputStream(
+          value.getContent().getReadOnlyBytes(), 0,
+          value.getContent().getCount());
+      // Converts InputStream to a String.
+      String content = new Scanner(inputStream).useDelimiter("\\A").next();
+      // Parses HTML with a tolerant parser and extracts all text.
+      String page_text = Jsoup.parse(content).text();
+      // Removes all punctuation.
+      page_text = page_text.replaceAll("[^a-zA-Z0-9 ]", "");
+      // Normalizes whitespace to single spaces.
+      page_text = page_text.replaceAll("\\s+", " ");
+      // Splits by space and outputs to OutputCollector.
+      for (String word: page_text.split(" ")) {
+        output.collect(new Text(word), new LongWritable(1));
+      }
     }
     catch (Exception e) {
-    	reporter.getCounter("WordCountMapper.exception", e.getClass().getSimpleName()).increment(1);
+      reporter.getCounter("WordCountMapper.exception",
+          e.getClass().getSimpleName()).increment(1);
     }
   }
 }
