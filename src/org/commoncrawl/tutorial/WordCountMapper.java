@@ -38,13 +38,13 @@ public class WordCountMapper extends MapReduceBase
       // Converts InputStream to a String.
       String content = new Scanner(inputStream).useDelimiter("\\A").next();
       // Parses HTML with a tolerant parser and extracts all text.
-      String page_text = Jsoup.parse(content).text();
+      String pageText = Jsoup.parse(content).text();
       // Removes all punctuation.
-      page_text = page_text.replaceAll("[^a-zA-Z0-9 ]", "");
+      pageText = pageText.replaceAll("[^a-zA-Z0-9 ]", "");
       // Normalizes whitespace to single spaces.
-      page_text = page_text.replaceAll("\\s+", " ");
+      pageText = pageText.replaceAll("\\s+", " ");
       // Splits by space and outputs to OutputCollector.
-      for (String word: page_text.split(" ")) {
+      for (String word: pageText.split(" ")) {
         output.collect(new Text(word), new LongWritable(1));
       }
     }
