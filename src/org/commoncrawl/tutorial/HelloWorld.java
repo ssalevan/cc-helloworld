@@ -28,9 +28,10 @@ import org.commoncrawl.hadoop.io.JetS3tARCSource;
  */
 public class HelloWorld {
   /**
-   * Contains the Amazon S3 bucket holding the CommonCrawl corpus.
+   * Contains the Amazon S3 bucket holding the CommonCrawl corpus
+   * at common-crawl/crawl-002/.
    */
-  private static final String CC_BUCKET = "commoncrawl-crawl-002";
+  private static final String CC_BUCKET = "aws-publicdatasets";
   
   /**
    * Outputs counted words into a CSV-formatted file.
