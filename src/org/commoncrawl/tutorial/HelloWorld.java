@@ -30,7 +30,7 @@ public class HelloWorld {
   /**
    * Contains the Amazon S3 bucket holding the CommonCrawl corpus.
    */
-  private static final String CC_BUCKET = "commoncrawl-crawl-002";
+  private static final String CC_BUCKET = "aws-publicdatasets";
   
   /**
    * Outputs counted words into a CSV-formatted file.
@@ -57,8 +57,8 @@ public class HelloWorld {
       public synchronized void write(Text key, LongWritable value)
           throws IOException {
         CsvRecordOutput csvOutput = new CsvRecordOutput(outStream);
-        csvOutput.writeString(key.toString(), "word");
-        csvOutput.writeLong(value.get(), "occurrences");
+        csvOutput.writeString(key.toString() + "\n", "url");
+        //csvOutput.writeLong(value.get(), "occurrences");
       }
 
       public synchronized void close(Reporter reporter) throws IOException {
@@ -71,7 +71,7 @@ public class HelloWorld {
     // Parses command-line arguments.
     String awsCredentials = args[0];
     String awsSecret = args[1];
-    String inputPrefixes = args[2];
+    String inputPrefixes = "common-crawl/crawl-002/" + args[2];
     String outputFile = args[3];
 
     // Echoes back command-line arguments.
